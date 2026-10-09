@@ -17,6 +17,14 @@ GS.registerSong({
     drive: { name: 'Chorus drive', steps: 'D.DU.UDU', about: 'Down, down-up, up-down-up. More push for the chorus.' },
     end: { name: 'Last strum', steps: 'D.......', about: 'One big D.' },
   },
+  // Verified chord loop per section type; tools/build-arrangements.py sizes them to the recording.
+  loops: {
+    intro: { bars: 'D,C G', pattern: 'riff' },
+    verse: { bars: 'D,C G', pattern: 'riff' },
+    chorus: { bars: 'D,C G', pattern: 'drive' },
+    solo: { bars: 'D,C G', pattern: 'riff' },
+    outro: { bars: 'D,C G', pattern: 'drive' },
+  },
   sections: [
     { name: "Spoken", type: 'verse', pattern: 'riff', bars: 'D,C G D,C G D,C G D,C G' },
     { name: "Verse", type: 'verse', pattern: 'riff', bars: 'D,C G D,C G D,C G D,C G D,C G D,C G D,C G D,C G D,C G D,C G' },

@@ -42,6 +42,15 @@ GS.registerSong({
     },
     end: { name: 'Last hit', steps: 'D...............', about: 'One last power chord. Let it ring out.' },
   },
+  // Verified chord loop per section type; tools/build-arrangements.py sizes them to the recording.
+  loops: {
+    intro: { bars: 'F5,Bb5 Ab5,Db5', pattern: 'clean' },
+    verse: { bars: 'F5,Bb5 Ab5,Db5', pattern: 'verse' },
+    prechorus: { bars: 'F5,Bb5 Ab5,Db5', pattern: 'build' },
+    chorus: { bars: 'F5,Bb5 Ab5,Db5', pattern: 'riff' },
+    solo: { bars: 'F5,Bb5 Ab5,Db5', pattern: 'riff' },
+    outro: { bars: 'F5,Bb5 Ab5,Db5', pattern: 'riff' },
+  },
   sections: [
     { name: "Intro/Riff", type: 'solo', pattern: 'riff', bars: 'F5,Bb5 Ab5,Db5 F5,Bb5 Ab5,Db5 F5,Bb5 Ab5,Db5 F5,Bb5 Ab5,Db5 F5,Bb5 Ab5,Db5 F5,Bb5 Ab5,Db5 F5,Bb5 Ab5,Db5' },
     { name: "Interlude", type: 'solo', pattern: 'riff', bars: 'F5,Bb5 Ab5,Db5' },

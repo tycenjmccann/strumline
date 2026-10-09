@@ -26,6 +26,15 @@ GS.registerSong({
     chorus: { name: 'Chorus drive', steps: 'D.D.D.DU.UD.D.DU', about: 'Same as the verse, just harder.' },
     end: { name: 'Last strum', steps: 'D...............', about: 'One strum. Let it hang.' },
   },
+  // Verified chord loop per section type; tools/build-arrangements.py sizes them to the recording.
+  loops: {
+    intro: { bars: 'Em7 G Dsus4 A7sus4', pattern: 'main' },
+    verse: { bars: 'Em7 G Dsus4 A7sus4', pattern: 'main' },
+    prechorus: { bars: 'Cadd9 Dsus4 Em7 Em7 Cadd9 Dsus4 Em7 Em7 Cadd9 Dsus4 G,Em7 G,A7sus4 A7sus4 A7sus4', pattern: 'pre' },
+    chorus: { bars: 'Cadd9 Em7 G Em7', pattern: 'chorus' },
+    solo: { bars: 'Em7 G Dsus4 A7sus4', pattern: 'main' },
+    outro: { bars: 'Cadd9 Em7 G Em7', pattern: 'chorus' },
+  },
   sections: [
     { name: "Intro", type: 'intro', pattern: 'main', bars: 'Em7 G Dsus4 A7sus4' },
     { name: "Verse 1", type: 'verse', pattern: 'main', bars: 'Em7 G Dsus4 A7sus4 Em7 G Dsus4 A7sus4 Em7 G Dsus4 A7sus4' },

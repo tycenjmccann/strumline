@@ -17,6 +17,14 @@ GS.registerSong({
     chorus: { name: 'Lift strum', steps: 'D.DU.UDU', about: 'Down, down-up, up-down-up — opens the chorus up.' },
     end: { name: 'Last strum', steps: 'D.......', about: 'One strum on C. Let it ring.' },
   },
+  // Verified chord loop per section type; tools/build-arrangements.py sizes them to the recording.
+  loops: {
+    intro: { bars: 'C,G Am,F C,G F,C', pattern: 'verse' },
+    verse: { bars: 'C,G Am,F C,G F,C', pattern: 'verse' },
+    chorus: { bars: 'Am,G F,C C,G F,C', pattern: 'chorus' },
+    solo: { bars: 'C,G Am,F C,G F,C', pattern: 'chorus' },
+    outro: { bars: 'F,C G,F', pattern: 'verse' },
+  },
   sections: [
     { name: "Intro", type: 'intro', pattern: 'verse', bars: 'C,G Am,F C,G F,C' },
     { name: "Verse 1", type: 'verse', pattern: 'verse', bars: 'C,G Am,F C,G F,C C,G Am,F C,G F,C' },

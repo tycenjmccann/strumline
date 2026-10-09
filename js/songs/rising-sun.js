@@ -22,6 +22,13 @@ GS.registerSong({
     strum: { name: '6/8 strum', steps: 'DDUDDU', about: 'Down down-up, down down-up. Accent beats 1 and 4.' },
     end: { name: 'Last note', steps: 'B 3 2 1 . .', about: 'Roll up once and let the Am ring.' },
   },
+  // Verified chord loop per section type; tools/build-arrangements.py sizes them to the recording.
+  loops: {
+    intro: { bars: 'Am C D F Am E Am E', pattern: 'arp' },
+    verse: { bars: 'Am C D F Am C E E Am C D F Am E Am C D F Am E Am E', pattern: 'arp' },
+    solo: { bars: 'Am C D F Am C E E Am C D F Am E Am C D F Am E Am E', pattern: 'strum' },
+    outro: { bars: 'Am Dm Am Dm Am Dm Am Dm', pattern: 'strum' },
+  },
   sections: [
     { name: "Intro", type: 'intro', pattern: 'arp', bars: 'Am C D F Am E Am E' },
     { name: "Verse 1", type: 'verse', pattern: 'arp', bars: 'Am C D F Am C E E Am C D F Am E Am C D F Am E Am E' },

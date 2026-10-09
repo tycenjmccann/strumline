@@ -22,6 +22,13 @@ GS.registerSong({
     swell: { name: 'Bridge swells', steps: 'D...D...', about: 'Two long strums per bar. Let them ring while the strings build.' },
     end: { name: 'Last strum', steps: 'D.......', about: 'One strum on C. Let it ring.' },
   },
+  // Verified chord loop per section type; tools/build-arrangements.py sizes them to the recording.
+  loops: {
+    intro: { bars: 'Am,G C', pattern: 'light' },
+    verse: { bars: 'Am,G C', pattern: 'main' },
+    chorus: { bars: 'Am,G C', pattern: 'chorus' },
+    bridge: { bars: 'Am,G C Am,G C Am,G C F F', pattern: 'swell' },
+  },
   sections: [
     { name: "Intro", type: 'intro', pattern: 'light', bars: 'Am,G C Am,G C' },
     { name: "Verse 1", type: 'verse', pattern: 'main', bars: 'Am,G C Am,G C Am,G C Am,G C' },

@@ -20,6 +20,14 @@ GS.registerSong({
     big: { name: 'Big chorus', steps: 'D.DUDUDU', about: 'Same chords, every eighth note, more volume.' },
     end: { name: 'Last strum', steps: 'D.......', about: 'One strum on D. Let it ring.' },
   },
+  // Verified chord loop per section type; tools/build-arrangements.py sizes them to the recording.
+  loops: {
+    intro: { bars: 'D,Dsus4 D,Asus4', pattern: 'soft' },
+    verse: { bars: 'D,Dsus4 D,Asus4', pattern: 'soft' },
+    chorus: { bars: 'D,Dsus4 D,Asus4', pattern: 'big' },
+    solo: { bars: 'D,Dsus4 D,Asus4', pattern: 'big' },
+    outro: { bars: 'D,Dsus4 D,Asus4', pattern: 'soft' },
+  },
   sections: [
     { name: "Intro", type: 'intro', pattern: 'soft', bars: 'D,Dsus4 D,Asus4' },
     { name: "Verse", type: 'verse', pattern: 'soft', bars: 'D,Dsus4 D,Asus4 D,Dsus4 D,Asus4 D,Dsus4 D,Asus4 D,Dsus4 D,Asus4' },

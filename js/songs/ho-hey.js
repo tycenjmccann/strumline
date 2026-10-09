@@ -18,6 +18,14 @@ GS.registerSong({
     soft: { name: 'Half-time', steps: 'D...D...', about: 'Two soft strums per bar. Let them ring; this is the quiet part.' },
     end: { name: 'Last strum', steps: 'D.......', about: 'One strum on C. Let it ring.' },
   },
+  // Verified chord loop per section type; tools/build-arrangements.py sizes them to the recording.
+  loops: {
+    intro: { bars: 'F,C F,C F,C F,C', pattern: 'stomp' },
+    verse: { bars: 'C,C,F,C C,C,F,C C,C,F,C C Am,G,F,C F,C F,C', pattern: 'main' },
+    chorus: { bars: 'Am,G,C,C Am,G F,C F,C F,C F,C', pattern: 'main' },
+    bridge: { bars: 'F,C,G,C F,C,G,G F,C,G,C', pattern: 'soft' },
+    outro: { bars: 'F,C F,C F,C', pattern: 'stomp' },
+  },
   sections: [
     { name: "Intro", type: 'intro', pattern: 'stomp', bars: 'F,C F,C F,C F,C' },
     { name: "Verse 1", type: 'verse', pattern: 'main', bars: 'C,C,F,C C,C,F,C C,C,F,C C Am,G,F,C F,C F,C' },

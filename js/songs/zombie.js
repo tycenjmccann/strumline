@@ -19,6 +19,15 @@ GS.registerSong({
     heavy: { name: 'Grunge downstrokes', steps: 'DdDdDdDd', about: 'All downstrokes on every eighth note, accent on each beat. Dig in and keep the wrist tight.' },
     end: { name: 'Last strum', steps: 'D.......', about: 'One big Em. Let it ring out.' },
   },
+  // Verified chord loop per section type; tools/build-arrangements.py sizes them to the recording.
+  loops: {
+    intro: { bars: 'Em C G D', pattern: 'pick' },
+    verse: { bars: 'Em C G D', pattern: 'verse' },
+    prechorus: { bars: 'Em C G D', pattern: 'build' },
+    chorus: { bars: 'Em C G D', pattern: 'heavy' },
+    solo: { bars: 'Em C G D', pattern: 'heavy' },
+    outro: { bars: 'Em C G D', pattern: 'build' },
+  },
   sections: [
     { name: "Intro", type: 'intro', pattern: 'pick', bars: 'Em C G D Em C G D Em C G D Em C G D' },
     { name: "Verse 1", type: 'verse', pattern: 'verse', bars: 'Em C G D Em C G D Em C G D Em C G D' },

@@ -33,7 +33,7 @@ def load_song_meta():
     js = ("global.window=global;const fs=require('fs');require('./js/theory.js');"
           "for(const f of fs.readdirSync('js/songs'))require('./js/songs/'+f);"
           "console.log(JSON.stringify({chords:Object.keys(GS.theory.CHORDS),songs:GS.songs.map(s=>({id:s.id,bpm:s.bpm,meter:s.meter||4,sub:s.sub||2,"
-          "capo:s.capo||0,patterns:Object.keys(s.patterns),shapes:Object.keys(s.shapes||{}),sections:s.sections,"
+          "capo:s.capo||0,patterns:Object.keys(s.patterns),shapes:Object.keys(s.shapes||{}),sections:s.sections,loops:s.loops||null,"
           "pcs:Object.fromEntries([...Object.keys(GS.theory.CHORDS),...Object.keys(s.shapes||{})].map(n=>[n,GS.theory.shape(n,s.shapes).pitchClasses.slice().sort((a,b)=>a-b).join(',')]))}))}))")
     return node_json(js)
 
@@ -251,7 +251,8 @@ def build(song, cache, library):
     entries = expand_repeats(parse_chart(chart['content']))
     available = set(library) | set(song['shapes'])
     shift = (int(chart.get('capo') or 0) - song['capo']) % 12
-    hand_set = {c for hs in song['sections'] for b in hs['bars'].split() for c in b.split(',')}
+    src_bars = [v['bars'] for v in song['loops'].values()] if song.get('loops') else [hs['bars'] for hs in song['sections']]
+    hand_set = {c for bars in src_bars for b in bars.split() for c in b.split(',')}
 
     def chart_pcs(name):
         # Notes of a chart chord after the capo shift (root + quality intervals).
@@ -336,7 +337,7 @@ def build(song, cache, library):
         return None, 'chart has no sections'
     if secs[0]['bar'] is None and not secs[0]['sung']:
         secs[0]['bar'] = 0
-    hand_bars = [b for hs in song['sections'] for b in hs['bars'].split()]
+    hand_bars = [b for bars in ([v['bars'] for v in song['loops'].values()] if song.get('loops') else [hs['bars'] for hs in song['sections']]) for b in bars.split()]
     cpb = max(1.0, sum(len(b.split(',')) for b in hand_bars) / max(1, len(hand_bars)))
     # Unsung sections between two anchors: give them the tail of the gap, sized by their written chords.
     for i, sc in enumerate(secs):
@@ -365,11 +366,16 @@ def build(song, cache, library):
 
     # Verified chord loops from the hand-built arrangement, by section type.
     loops = {}
-    for hs in song['sections']:
-        t = hs.get('type', 'verse')
-        if hs.get('pattern') == 'end':
-            continue
-        loops.setdefault(t, (hs['bars'].split(), hs.get('pattern', 'main')))
+    if song.get('loops'):
+        # Verified loops stored in the song file: re-runs never feed generated bars back in.
+        for t, v in song['loops'].items():
+            loops[t] = (v['bars'].split(), v['pattern'])
+    else:
+        for hs in song['sections']:
+            t = hs.get('type', 'verse')
+            if hs.get('pattern') == 'end':
+                continue
+            loops.setdefault(t, (hs['bars'].split(), hs.get('pattern', 'main')))
     any_loop = loops.get('verse') or next(iter(loops.values()))
 
     def fill(loop, n):
@@ -458,6 +464,19 @@ def build(song, cache, library):
     sections.append({'name': 'End', 'type': 'outro', 'pattern': end_pat, 'bars': last_chord, 'band': 'hit'})
 
     bpm = round(song['meter'] * 60 / P, 1)
+    # Half-bar chord timeline of the final arrangement (what the player will actually play).
+    half = []
+    for sec in sections[:-1]:
+        for b in sec['bars'].split():
+            parts = b.split(',')
+            if len(parts) == 1:
+                half += parts * 2
+            elif len(parts) == 2:
+                half += parts
+            else:
+                half += [parts[0], parts[len(parts) // 2]]
+    beat_sec = P / song['meter']
+    k_lines = karaoke_lines(lrc, vocal, pairs, lambda t: (t - t_start) / beat_sec, half, song['meter'], beat_sec)
     # Lyrics on the song's beat clock, with chords over the words.
     beat = lambda t: (t - t_start) / (P / song['meter'])
     lyric_lines = []
@@ -476,8 +495,151 @@ def build(song, cache, library):
         'matched': f'{matched}/{len(vocal)}', 'resid_ms': round(resid * 1000), 'bar_ms': round(P * 1000), 'bpm': bpm, 'bar_s': round(P, 2),
         'start_s': round(t_start, 2), 'bars': len(slots) // 2, 'rec_s': round(rec_len), 'sections': len(sections),
     }
+    # How often a line's first chord matches what the arrangement plays there (sync check, numbers only).
+    hits = tot = 0
+    for kl in k_lines:
+        if kl['chords']:
+            wi, name = kl['chords'][0]
+            b = dict(kl['words'])
+            bt = kl['words'][wi][1] if wi < len(kl['words']) else kl['beat']
+            h = int(bt // (song['meter'] / 2))
+            tot += 1
+            hits += 1 if 0 <= h < len(half) and half[h] == name else 0
+    # Lines must not overlap: keep each one starting after the previous ends (squeeze, never reorder).
+    overlaps = 0
+    for a, b in zip(k_lines, k_lines[1:]):
+        if b['beat'] < a['end'] - 0.01:
+            overlaps += 1
+            if b['beat'] > a['beat']:
+                a['end'] = round(b['beat'] - 0.1, 3)
+                n = len(a['words'])
+                t0 = a['words'][0][1]
+                span = max(0.2, a['end'] - t0)
+                for i, wv in enumerate(a['words']):
+                    wv[1] = round(min(wv[1], t0 + span * i / n), 3)
+    report['sync'] = f'{hits}/{tot} overlaps {overlaps}'
     return {'bpm': bpm, 'sections': sections, 'lyrics': {'source': 'LRCLIB + Ultimate Guitar', 'startSeconds': round(t_start, 3),
-                                                        'lines': lyric_lines}, 'report': report}, None
+                                                        'karaoke': k_lines}, 'report': report}, None
+
+
+
+def syllables(word):
+    w = re.sub(r"[^a-z]", "", word.lower())
+    if not w:
+        return 1
+    n = len(re.findall(r"[aeiouy]+", w))
+    if w.endswith("e") and n > 1 and not w.endswith(("le", "ee")):
+        n -= 1
+    return max(1, n)
+
+
+def chord_word_index(chart_text, col):
+    """Index of the word a chord column sits over (or the next word if it sits between words)."""
+    idx = -1
+    for m in re.finditer(r"\S+", chart_text):
+        if m.end() > col:
+            return max(0, idx + 1) if m.start() > col else idx + 1
+        idx += 1
+    return max(0, idx)
+
+
+def map_word_index(chart_words, lrc_words, k):
+    sm = difflib.SequenceMatcher(None, [w.lower() for w in chart_words], [w.lower() for w in lrc_words])
+    for a, b, n in sm.get_matching_blocks():
+        if a <= k < a + n:
+            return b + (k - a)
+    ratio = len(lrc_words) / max(1, len(chart_words))
+    return min(len(lrc_words) - 1, int(round(k * ratio)))
+
+
+def karaoke_lines(lrc, vocal, pairs, beat_of, half_bar_chords, meter, beat_sec):
+    """Word-timed lines locked to the arrangement's chord changes. Returns plain data; never printed."""
+    inv = {j: i for i, j in pairs.items()}
+    n_half = len(half_bar_chords)
+    syl_beats = 0.30 / beat_sec  # an average sung syllable
+    out = []
+    shift_prev = 0
+    for j, ln in enumerate(lrc):
+        words = ln['text'].split()
+        if not words:
+            continue
+        b_line = beat_of(ln['t'])
+        b_next = beat_of(lrc[j + 1]['t']) if j + 1 < len(lrc) else b_line + 4 * meter
+        anchors = {}
+        chords = []
+        if j in inv and vocal[inv[j]]['chords']:
+            ch = vocal[inv[j]]
+            cw = ch['text'].split()
+            span = max(1.0, (b_next - b_line))
+            L = max(1, len(ch['text'].rstrip()))
+            ests = []
+            for col, name in ch['chords']:
+                wi = map_word_index(cw, words, chord_word_index(ch['text'], col))
+                ests.append((wi, name, b_line + min(0.999, col / L) * span * 0.95))
+            # Lock the line to where the arrangement actually plays its first chord (search ±4 bars).
+            wi0, n0, e0 = ests[0]
+            h0 = int(round(e0 / (meter / 2)))
+            best = None
+            for d in sorted(range(-8, 9), key=abs):
+                h = h0 + d
+                if 0 <= h < n_half and half_bar_chords[h] == n0 and (h == 0 or half_bar_chords[h - 1] != n0 or d == 0):
+                    best = d
+                    break
+            if best is None:
+                for d in sorted(range(-8, 9), key=abs):
+                    h = h0 + d
+                    if 0 <= h < n_half and half_bar_chords[h] == n0:
+                        best = d
+                        break
+            shift = (best if best is not None else 0) * (meter / 2) + (h0 * (meter / 2) - e0)
+            shift_prev = shift
+            cur_h = h0 + (best or 0)
+            anchors[wi0] = cur_h * (meter / 2)
+            chords.append([wi0, n0])
+            for wi, name, e in ests[1:]:
+                # Next place after the previous anchor where the arrangement switches to this chord.
+                h = cur_h + 1
+                while h < n_half and half_bar_chords[h] != name:
+                    h += 1
+                if h < n_half and h - cur_h <= 8:
+                    cur_h = h
+                    if wi > max(anchors):
+                        anchors[wi] = h * (meter / 2)
+                chords.append([wi, name])
+        else:
+            shift = shift_prev
+        b_line += shift
+        b_next += shift_prev if j + 1 < len(lrc) else 0
+        syl = [syllables(w) for w in words]
+        # Pickup words before the first anchor; the rest spread between anchors by syllable count.
+        if anchors:
+            first_wi = min(anchors)
+            pre = sum(syl[:first_wi])
+            start = anchors[first_wi] - min(pre * syl_beats, 1.5 * (meter / 4) * 2)  # pickups are short
+            if out:
+                start = max(start, out[-1]['end'] + 0.1)
+        else:
+            start = b_line
+        pts = sorted(anchors.items())
+        if not pts or pts[0][0] != 0:
+            pts = [(0, start)] + pts
+        total = sum(syl)
+        end_guess = pts[-1][1] + sum(syl[pts[-1][0]:]) * syl_beats
+        end = min(end_guess, b_next - 0.25) if j + 1 < len(lrc) else end_guess
+        pts.append((len(words), max(end, pts[-1][1] + 0.5)))
+        times = []
+        for k in range(len(pts) - 1):
+            (w0, t0), (w1, t1) = pts[k], pts[k + 1]
+            seg = syl[w0:w1]
+            tot = max(1, sum(seg))
+            acc = 0
+            for i, sy in enumerate(seg):
+                times.append(t0 + (t1 - t0) * acc / tot)
+                acc += sy
+        line_end = pts[-1][1]
+        out.append({'beat': round(times[0], 3), 'end': round(line_end, 3),
+                    'words': [[w, round(t, 3)] for w, t in zip(words, times)], 'chords': chords})
+    return out
 
 
 def js_sections(sections):
@@ -519,7 +681,7 @@ def main():
             continue
         r = res['report']
         print(f"{song['id']:22} matched {r['matched']:>6}  fit ±{r['resid_ms']:>3}/{r['bar_ms']}ms  bpm {r['bpm']:>6}  bars {r['bars']:>3}  "
-              f"start {r['start_s']:>5}s  rec {r['rec_s']}s  sections {r['sections']}")
+              f"start {r['start_s']:>5}s  rec {r['rec_s']}s  sections {r['sections']}  chord-sync {r['sync']}")
         if '--show' in sys.argv:
             for sec in res['sections']:
                 print(f"     {sec['name'][:18]:18} {sec['bars']}")

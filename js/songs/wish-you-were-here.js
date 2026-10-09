@@ -36,6 +36,13 @@ GS.registerSong({
     },
     end: { name: 'Last strum', steps: 'D...............', about: 'One strum. Let it fade like the wind at the end of the record.' },
   },
+  // Verified chord loop per section type; tools/build-arrangements.py sizes them to the recording.
+  loops: {
+    intro: { bars: 'Em7 G Em7 G Em7 A7sus4 Em7 A7sus4 G', pattern: 'riff' },
+    solo: { bars: 'Em7 G Em7 G Em7 A7sus4 Em7 A7sus4 G', pattern: 'riff' },
+    verse: { bars: 'C D/F# Am G D/F# C Am G', pattern: 'verse' },
+    outro: { bars: 'Em7 G Em7 G Em7 A7sus4 Em7 A7sus4 G', pattern: 'jam' },
+  },
   sections: [
     { name: "Intro", type: 'intro', pattern: 'riff', bars: 'Em7 G Em7 G Em7 A7sus4 Em7 A7sus4 G Em7 G Em7 G Em7 A7sus4 Em7 A7sus4 G Em7 G Em7 G Em7 A7sus4' },
     { name: "Verse 1", type: 'verse', pattern: 'verse', bars: 'C D/F# Am G D/F# C Am G' },

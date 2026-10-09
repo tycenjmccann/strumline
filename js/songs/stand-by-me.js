@@ -18,6 +18,14 @@ GS.registerSong({
     big: { name: 'Driving strum', steps: 'D.DUDUDU', about: 'More energy for the string section: every eighth note after beat 1.' },
     end: { name: 'Last strum', steps: 'D.......', about: 'One strum. Let it ring.' },
   },
+  // Verified chord loop per section type; tools/build-arrangements.py sizes them to the recording.
+  loops: {
+    intro: { bars: 'G G Em Em C D G G', pattern: 'intro' },
+    verse: { bars: 'G G Em Em C D G G', pattern: 'main' },
+    chorus: { bars: 'G G Em Em C D G G', pattern: 'main' },
+    solo: { bars: 'G G Em Em C D G G', pattern: 'big' },
+    outro: { bars: 'G G Em Em C D G G', pattern: 'intro' },
+  },
   sections: [
     { name: "Intro", type: 'intro', pattern: 'intro', bars: 'G G Em Em C D G G' },
     { name: "Verse 1", type: 'verse', pattern: 'main', bars: 'G G Em Em C D G G G G Em Em C D G G' },

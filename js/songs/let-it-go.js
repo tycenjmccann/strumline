@@ -46,6 +46,15 @@ GS.registerSong({
     },
     end: { name: 'Last strum', steps: 'D.......', about: 'One big strum. Let it ring out.' },
   },
+  // Verified chord loop per section type; tools/build-arrangements.py sizes them to the recording.
+  loops: {
+    intro: { bars: 'Em C D Am', pattern: 'arp' },
+    verse: { bars: 'Em C D Am Em C D A Em C D Am Em D A A', pattern: 'arp' },
+    prechorus: { bars: 'D C D C', pattern: 'pre' },
+    chorus: { bars: 'G D Em C G D Em C G D Em C Bm7 Bb C C', pattern: 'chorus' },
+    solo: { bars: 'G D G D', pattern: 'verse' },
+    bridge: { bars: 'C C D D Em C D Am C C', pattern: 'drive' },
+  },
   sections: [
     { name: "Verse 1", type: 'verse', pattern: 'arp', bars: 'Em C D Am Em C D A Em C D Am Em D A A Em C D Am Em C D A' },
     { name: "Pre-Chorus", type: 'prechorus', pattern: 'pre', bars: 'D C D C D C D C D C D C' },

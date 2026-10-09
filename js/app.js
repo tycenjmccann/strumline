@@ -293,10 +293,7 @@
                 <div><b class="jam-acc">–</b><span>timing</span></div>
                 <div class="jam-meter"><i></i></div>
               </div>
-              <div class="lyrics" hidden>
-                <div class="ly-cur"></div>
-                <div class="ly-next"></div>
-              </div>
+              <div class="lyrics" hidden><div class="kara"></div></div>
               <button class="start-overlay">
                 <span class="so-btn">${ICON.play}</span>
                 <span class="so-title">${isDrill ? 'Start the drill' : 'Play along'}</span>
@@ -632,17 +629,17 @@
 
     // ── Lyrics (personal-use cache in data/lyrics, never committed; absent on the public site) ──
     const lyricsEl = $('.lyrics', root);
-    const lyCur = $('.ly-cur', root);
-    const lyNext = $('.ly-next', root);
+    const kara = $('.kara', root);
     let lyrics = null;
     let lastLine = -2;
+    let lastWord = -2;
     const lyricId = isDrill ? null : song.id;
     if (lyricId) {
       const tag = document.createElement('script');
       tag.src = `data/lyrics/${lyricId}.js`;
       tag.onload = () => {
         lyrics = GS.lyrics && GS.lyrics[lyricId];
-        if (!lyrics) return;
+        if (!lyrics || !lyrics.karaoke) return;
         $('[data-toggle="lyrics"]', root).hidden = false;
         lyricsEl.hidden = !prefs.lyrics;
         reflectToggles();
@@ -650,45 +647,53 @@
       tag.onerror = () => tag.remove();
       document.body.appendChild(tag);
     }
-    const lineHTML = (ln) => {
-      if (!ln) return '';
-      if (!ln.chart || !ln.chords || !ln.chords.length) return `<span class="ly-text">${esc(ln.text)}</span>`;
-      // Chords sit over the word they fall on in the chart's version of the line.
-      const t = ln.chart;
-      const cuts = ln.chords.map(([c]) => Math.min(c, t.length)).concat([t.length]);
-      let html = cuts[0] > 0 ? `<span class="ly-seg">${esc(t.slice(0, cuts[0]))}</span>` : '';
-      ln.chords.forEach(([c, name], i) => {
-        const seg = t.slice(cuts[i], cuts[i + 1]) || ' ';
-        html += `<span class="ly-seg"><b class="ly-ch" style="--c:${T.chordColor(name)}">${esc(name)}</b>${esc(seg)}</span>`;
-      });
-      return html;
+    // One phrase at a time, the sung word popped in the accent colour, chords over the words they land on.
+    const phraseHTML = (ln) => {
+      const chordAt = new Map(ln.chords.map(([wi, name]) => [wi, name]));
+      return ln.words
+        .map(([w], i) => {
+          const ch = chordAt.get(i);
+          const tagc = ch ? `<b class="k-ch" style="--c:${T.chordColor(ch)}">${esc(ch)}</b>` : '';
+          return `<span class="k-w" data-i="${i}">${tagc}${esc(w)}</span>`;
+        })
+        .join('');
     };
     const updateLyrics = (beat) => {
       if (!lyrics || lyricsEl.hidden) return;
-      const L = lyrics.lines;
-      // Show a line a beat early so you can read ahead.
-      let i = -1;
+      const L = lyrics.karaoke;
+      const bps = (tl.bpm * player.speed) / 60;
+      const pre = 0.18 * bps;
+      const hold = 0.35 * bps;
+      let li = -1;
       for (let k = 0; k < L.length; k++) {
-        if (L[k].beat - 1 <= beat) i = k;
-        else break;
+        if (beat >= L[k].beat - pre && beat <= L[k].end + hold) li = k;
+        if (L[k].beat - pre > beat) break;
       }
-      const cur = L[i];
-      const nxt = L[i + 1];
-      const instrumental = !cur || (nxt && nxt.beat - cur.beat > 3 * tl.meter && beat - cur.beat > 2 * tl.meter);
-      const key = instrumental ? -1 - (i + 1) : i;
-      if (key !== lastLine) {
-        lastLine = key;
-        lyCur.innerHTML = instrumental ? '<span class="ly-inst">♪</span>' : lineHTML(cur);
-        lyNext.innerHTML = lineHTML(instrumental ? nxt : L[i + 1]);
-        lyCur.classList.remove('in');
-        void lyCur.offsetWidth;
-        lyCur.classList.add('in');
+      if (li !== lastLine) {
+        lastLine = li;
+        lastWord = -2;
+        if (li < 0) {
+          kara.classList.remove('on');
+        } else {
+          kara.innerHTML = phraseHTML(L[li]);
+          kara.classList.remove('on');
+          void kara.offsetWidth;
+          kara.classList.add('on');
+        }
       }
-      if (!instrumental && cur) {
-        const end = nxt ? Math.min(nxt.beat, cur.beat + 4 * tl.meter) : cur.beat + 2 * tl.meter;
-        const p = Math.max(0, Math.min(1, (beat - cur.beat) / Math.max(0.5, end - cur.beat)));
-        lyCur.style.setProperty('--p', (p * 100).toFixed(1) + '%');
+      if (li < 0) return;
+      const ln = L[li];
+      let aw = -1;
+      for (let i = 0; i < ln.words.length; i++) if (beat >= ln.words[i][1]) aw = i;
+      if (beat > ln.end + 0.05) aw = ln.words.length;
+      if (aw !== lastWord) {
+        lastWord = aw;
+        kara.querySelectorAll('.k-w').forEach((el, i) => {
+          el.classList.toggle('active', i === aw);
+          el.classList.toggle('past', i < aw);
+        });
       }
+      kara.classList.toggle('out', beat > ln.end + 0.12 * bps);
     };
 
     // ── Per-frame UI ──

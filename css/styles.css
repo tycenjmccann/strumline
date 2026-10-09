@@ -1026,90 +1026,77 @@ button {
   transform: scaleX(0);
 }
 
-/* Synced lyrics: sits under the hit line so it never covers incoming notes */
+/* Karaoke lyrics: one phrase at a time under the hit line; bare words, sung word popped in the accent */
 .lyrics {
   position: absolute;
-  left: 50%;
-  bottom: 6px;
-  transform: translateX(-50%);
-  width: min(94%, 1000px);
-  padding: 4px 20px 6px;
-  border-radius: 14px;
-  background: linear-gradient(180deg, rgba(11, 8, 7, 0.35), rgba(11, 8, 7, 0.85));
-  backdrop-filter: blur(4px);
-  text-align: center;
+  left: 0;
+  right: 0;
+  bottom: 18px;
+  display: flex;
+  justify-content: center;
   pointer-events: none;
 }
 
-.ly-cur {
-  position: relative;
-  display: inline-block;
+.kara {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: baseline;
+  gap: 0 16px;
+  max-width: 94%;
+  padding-top: 22px;
   font-family: var(--f-body);
   font-weight: 800;
-  font-size: 24px;
-  line-height: 1.1;
-  padding-top: 18px;
-  color: var(--cream);
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+  font-size: 34px;
+  line-height: 1.15;
+  letter-spacing: -0.005em;
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.18s ease, transform 0.24s var(--ease);
 }
 
-.ly-cur::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  bottom: -4px;
-  height: 3px;
-  width: var(--p, 0%);
-  border-radius: 2px;
-  background: var(--chord);
-  box-shadow: 0 0 10px var(--chord);
+.kara.on {
+  opacity: 1;
+  transform: none;
 }
 
-.ly-cur.in {
-  animation: lyIn 0.25s var(--ease);
+.kara.on.out {
+  opacity: 0;
+  transition: opacity 0.23s ease;
 }
 
-@keyframes lyIn {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-}
-
-.ly-next {
-  font-family: var(--f-body);
-  font-weight: 600;
-  font-size: 15px;
-  color: var(--muted);
-  margin-top: 6px;
-  min-height: 1.1em;
-}
-
-.ly-next .ly-ch {
-  display: none;
-}
-
-.ly-seg {
+.k-w {
   position: relative;
-  white-space: pre-wrap;
+  display: inline-block;
+  color: #f5efe8;
+  opacity: 0.62;
+  text-shadow: 0 3px 10px rgba(0, 0, 0, 0.9), 0 1px 3px rgba(0, 0, 0, 0.95);
+  transition: transform 0.22s cubic-bezier(0.34, 1.8, 0.5, 1), color 0.1s, opacity 0.1s;
 }
 
-.ly-ch {
+.k-w.past {
+  opacity: 1;
+}
+
+.k-w.active {
+  opacity: 1;
+  color: var(--amber);
+  transform: scale(1.16);
+  text-shadow: 0 0 18px rgba(255, 181, 71, 0.75), 0 3px 10px rgba(0, 0, 0, 0.9), 0 1px 3px rgba(0, 0, 0, 0.95);
+}
+
+.k-ch {
   position: absolute;
   left: 0;
   bottom: 100%;
+  margin-bottom: 1px;
   font-family: var(--f-display);
   font-weight: 900;
-  font-size: 0.78em;
+  font-size: 0.6em;
   letter-spacing: 0.02em;
   color: var(--c, var(--amber));
   white-space: nowrap;
-  text-shadow: 0 0 10px color-mix(in srgb, var(--c, var(--amber)) 60%, transparent);
-}
-
-.ly-inst {
-  color: var(--amber);
-  font-size: 22px;
+  text-shadow: 0 0 10px color-mix(in srgb, var(--c, var(--amber)) 55%, transparent), 0 2px 6px rgba(0, 0, 0, 0.9);
 }
 
 /* Sidecar */
