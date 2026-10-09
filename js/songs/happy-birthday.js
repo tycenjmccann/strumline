@@ -1,0 +1,51 @@
+GS.registerSong({
+  id: 'happy-birthday',
+  order: 23,
+  title: 'Happy Birthday',
+  artist: 'Traditional',
+  level: 'beginner',
+  tags: ['kids'],
+  bpm: 96,
+  meter: 3,
+  sub: 2,
+  capo: 0,
+  key: 'G',
+  feel: 'waltz',
+  blurb:
+    'Learn this one and you will be the hero of every party in the house: three friendly chords, a gentle 1-2-3 sway, and a room full of singers who already know it by heart.',
+  skills: ['G · C · D', 'Counting in 3', 'Waltz strum'],
+  patterns: {
+    slow: {
+      name: 'Slow strums',
+      steps: 'D...d.',
+      about: 'A big strum on 1 and a soft one on 3. Beat 2 is free time to get your next chord ready.',
+    },
+    quarters: {
+      name: 'Quarter downs',
+      steps: 'D.D.D.',
+      about: 'Three even down strums per bar. Make the first one a little louder: ONE two three.',
+    },
+    waltz: {
+      name: 'Waltz down-up',
+      steps: 'D.DUDU',
+      about: 'Down on 1, then down-up, down-up. Keep the ups light and only brush the top strings.',
+    },
+    end: { name: 'Last strum', steps: 'D.....', about: 'One big strum. Let it ring while everyone cheers.' },
+  },
+  sections: [
+    { name: 'Intro', type: 'intro', pattern: 'slow', bars: 'G D D G G C G,G,D G', band: 'light' },
+    { name: 'Verse 1 (slow)', type: 'verse', pattern: 'slow', bars: 'G D D G G C G,G,D G', band: 'light' },
+    { name: 'Verse 2 (on the beat)', type: 'verse', pattern: 'quarters', bars: 'G D D G G C G,G,D G' },
+    { name: 'Verse 3', type: 'verse', pattern: 'quarters', bars: 'G D D G G C G,G,D G' },
+    { name: 'Verse 4 (waltz strum)', type: 'verse', pattern: 'waltz', bars: 'G D D G G C G,G,D G' },
+    { name: 'Verse 5 (everyone)', type: 'chorus', pattern: 'waltz', bars: 'G D D G G C G,G,D G' },
+    { name: 'Big finish', type: 'outro', pattern: 'end', bars: 'G', band: 'hit' },
+  ],
+  tips: [
+    'Count "1-2-3, 1-2-3" out loud and lean on the 1. That gentle sway is what makes it a waltz.',
+    'The singing starts just before the first full bar: strum one G, count "1, 2", and have everyone come in on 3.',
+    'G → C: lead with your ring finger. It lands on the A string, 3rd fret, and the other two fingers follow.',
+    'On D, skip the two thickest strings. Aim your strum at the open D string and the three below it.',
+    'Near the end, G gets two beats and D gets only one before you land home on G. If the D is not ready yet, keep strumming G and catch the last bar.',
+  ],
+});

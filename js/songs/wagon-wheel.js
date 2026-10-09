@@ -2,7 +2,8 @@
  * Song schema (every song file follows this shape):
  *   meter    beats per bar            sub    pattern steps per beat (2 = eighths, 4 = sixteenths)
  *   pulse    beats per metronome click group (3 for 6/8 feel)
- *   feel     backing band style: country | folk | rock | ballad | sixeight | sixteen | reggae
+ *   feel     backing band style: country | folk | rock | ballad | sixeight | sixteen | reggae | waltz (3/4)
+ *   tags     optional, e.g. ['kids'] puts the song under the Kids filter
  *   capo     fret to match the record (audio follows the capo selector)
  *   patterns steps string, one char per step:  D down  d soft down  U up  u soft up  x mute  . rest
  *            or space-separated picking tokens: B root bass  b alternate bass  1–6 string number  (e.g. "B 3 2 1 2 3")

@@ -1,0 +1,50 @@
+GS.registerSong({
+  id: 'twinkle-twinkle',
+  order: 25,
+  title: 'Twinkle Twinkle Little Star',
+  artist: 'Traditional',
+  level: 'beginner',
+  tags: ['kids'],
+  bpm: 96,
+  meter: 4,
+  sub: 2,
+  capo: 0,
+  key: 'G',
+  feel: 'folk',
+  blurb:
+    'The first song almost every child learns to sing, and a lovely first step for you too: three open chords, a slow gentle pace, and a soft verse made for bedtime.',
+  skills: ['G · C · D', 'Two chords per bar', 'Steady quarter notes'],
+  patterns: {
+    halves: {
+      name: 'One strum per chord',
+      steps: 'D...D...',
+      about: 'Two strums per bar, on beats 1 and 3. When a bar has two chords, each one gets its own strum.',
+    },
+    quarters: {
+      name: 'Quarter downs',
+      steps: 'D.D.D.D.',
+      about: 'Four even down strums per bar. Change chords right on beat 1 or beat 3.',
+    },
+    downup: {
+      name: 'Easy down-up',
+      steps: 'D.DUD.DU',
+      about: 'Down, down-up, down, down-up. Keep it light and twinkly.',
+    },
+    end: { name: 'Last strum', steps: 'D.......', about: 'One soft strum. Let it ring and fade.' },
+  },
+  sections: [
+    { name: 'Intro', type: 'intro', pattern: 'halves', bars: 'G C,G C,G D,G', band: 'light' },
+    { name: 'Verse 1 (slow)', type: 'verse', pattern: 'halves', bars: 'G C,G C,G D,G G,C G,D G,C G,D G C,G C,G D,G', band: 'light' },
+    { name: 'Verse 2 (on the beat)', type: 'verse', pattern: 'quarters', bars: 'G C,G C,G D,G G,C G,D G,C G,D G C,G C,G D,G' },
+    { name: 'Verse 3', type: 'verse', pattern: 'downup', bars: 'G C,G C,G D,G G,C G,D G,C G,D G C,G C,G D,G' },
+    { name: 'Verse 4 (lullaby)', type: 'verse', pattern: 'halves', bars: 'G C,G C,G D,G G,C G,D G,C G,D G C,G C,G D,G', band: 'light' },
+    { name: 'Big finish', type: 'outro', pattern: 'end', bars: 'G', band: 'hit' },
+  ],
+  tips: [
+    'Most bars are split in half: two beats on one chord, two on the next. On the slow verse, strum once per chord.',
+    'The middle section rocks back and forth: G to C, then G to D, twice in a row.',
+    'G → C: lead with your ring finger. It lands on the A string, 3rd fret, and the other two fingers follow.',
+    'D only ever lasts two beats. Practise G → D with the drill: index on the G string 2nd fret, middle on the high e 2nd fret, ring on the B string 3rd fret.',
+    'For the lullaby verse, strum with the soft side of your thumb instead of a pick and let each chord ring.',
+  ],
+});

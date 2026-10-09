@@ -267,6 +267,17 @@ button {
   border: 1px solid rgba(53, 224, 194, 0.35);
 }
 
+.lvl-kids {
+  color: var(--rose);
+  background: rgba(255, 92, 138, 0.1);
+  border: 1px solid rgba(255, 92, 138, 0.4);
+}
+
+.lvls {
+  display: flex;
+  gap: 6px;
+}
+
 .lvl-intermediate {
   color: var(--ember);
   background: rgba(255, 106, 61, 0.1);

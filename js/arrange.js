@@ -19,6 +19,7 @@
       bass: [[0, 'R'], [0.375, 'R'], [0.5, 'R'], [0.875, '5']],
     },
     reggae: { kick: '....X...', snare: '....x...', shaker: '.o.o.o.o', bass: [[0, 'R'], [0.375, 'R'], [0.625, '5']] },
+    waltz: { kick: 'x.....', snare: '..o.o.', shaker: 'oooooo', bass: [[0, 'R'], [1 / 3, '5'], [2 / 3, '5']] },
   };
   const DRUM_VEL = { X: 1, x: 0.75, o: 0.45 };
 

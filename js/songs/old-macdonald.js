@@ -1,0 +1,50 @@
+GS.registerSong({
+  id: 'old-macdonald',
+  order: 26,
+  title: 'Old MacDonald Had a Farm',
+  artist: 'Traditional',
+  level: 'beginner',
+  tags: ['kids'],
+  bpm: 120,
+  meter: 4,
+  sub: 2,
+  capo: 0,
+  key: 'G',
+  feel: 'country',
+  blurb:
+    'A barnyard romp the kids can steer verse by verse while you keep a happy country beat going, mostly on one comfortable G chord.',
+  skills: ['G · C · D', 'Quick half-bar changes', 'Down-up strum'],
+  patterns: {
+    halves: {
+      name: 'One strum per chord',
+      steps: 'D...D...',
+      about: 'Two strums per bar, on beats 1 and 3. When a bar has two chords, each one gets its own strum.',
+    },
+    quarters: {
+      name: 'Quarter downs',
+      steps: 'D.D.D.D.',
+      about: 'Four even down strums per bar. Steady as a tractor.',
+    },
+    downup: {
+      name: 'Easy down-up',
+      steps: 'D.DUD.DU',
+      about: 'Down, down-up, down, down-up. Bouncy and light, with small upstrokes.',
+    },
+    end: { name: 'Last strum', steps: 'D.......', about: 'One big strum. Let it ring out.' },
+  },
+  sections: [
+    { name: 'Intro', type: 'intro', pattern: 'halves', bars: 'G C,G G,D G', band: 'light' },
+    { name: 'Verse 1 (slow)', type: 'verse', pattern: 'halves', bars: 'G C,G G,D G G C,G G,D G G G G G G C,G G,D G', band: 'light' },
+    { name: 'Verse 2 (on the beat)', type: 'verse', pattern: 'quarters', bars: 'G C,G G,D G G C,G G,D G G G G G G C,G G,D G' },
+    { name: 'Verse 3', type: 'verse', pattern: 'downup', bars: 'G C,G G,D G G C,G G,D G G G G G G C,G G,D G' },
+    { name: 'Verse 4', type: 'verse', pattern: 'downup', bars: 'G C,G G,D G G C,G G,D G G G G G G C,G G,D G' },
+    { name: 'Big finish', type: 'outro', pattern: 'end', bars: 'G', band: 'hit' },
+  ],
+  tips: [
+    'Almost the whole song lives on G. You only make quick two-beat visits to C and D before coming home.',
+    'Each verse has four bars of pure G in the middle. Relax your fretting hand there and let the kids take the spotlight.',
+    'G → C: lead with your ring finger. It lands on the A string, 3rd fret, and the other two fingers follow.',
+    'G → D: lift all three fingers together and land them as a little triangle: index on the G string 2nd fret, ring on the B string 3rd fret, middle on the high e 2nd fret.',
+    'The chords never change from verse to verse, so let the kids choose what comes next and keep going as long as they want.',
+  ],
+});

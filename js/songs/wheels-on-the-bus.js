@@ -1,0 +1,51 @@
+GS.registerSong({
+  id: 'wheels-on-the-bus',
+  order: 27,
+  title: 'The Wheels on the Bus',
+  artist: 'Traditional',
+  level: 'beginner',
+  tags: ['kids'],
+  bpm: 120,
+  meter: 4,
+  sub: 2,
+  capo: 0,
+  key: 'G',
+  feel: 'folk',
+  blurb:
+    'Only two chords and a short, cheerful loop, so you can keep your eyes on the kids and their hand motions instead of your fingers.',
+  skills: ['G · D', 'Two-chord switching', 'Steady quarter notes'],
+  patterns: {
+    whole: {
+      name: 'Whole notes',
+      steps: 'D.......',
+      about: 'One strum per bar. Let it ring for four counts while you get the next chord ready.',
+    },
+    quarters: {
+      name: 'Quarter downs',
+      steps: 'D.D.D.D.',
+      about: 'Four even down strums per bar, like the bus rolling along.',
+    },
+    downup: {
+      name: 'Easy down-up',
+      steps: 'D.DUD.DU',
+      about: 'Down, down-up, down, down-up. Small, light upstrokes on the top strings.',
+    },
+    end: { name: 'Last strum', steps: 'D.......', about: 'One big strum. Let it ring out.' },
+  },
+  sections: [
+    { name: 'Intro', type: 'intro', pattern: 'whole', bars: 'G G D G', band: 'light' },
+    { name: 'Verse 1 (slow)', type: 'verse', pattern: 'whole', bars: 'G G D G G G D G', band: 'light' },
+    { name: 'Verses 2-3', type: 'verse', pattern: 'quarters', bars: 'G G D G G G D G', repeat: 2 },
+    { name: 'Verses 4-5', type: 'verse', pattern: 'downup', bars: 'G G D G G G D G', repeat: 2 },
+    { name: 'Verse 6 (soft)', type: 'verse', pattern: 'quarters', bars: 'G G D G G G D G', band: 'light' },
+    { name: 'Verse 7 (everyone)', type: 'chorus', pattern: 'downup', bars: 'G G D G G G D G' },
+    { name: 'Big finish', type: 'outro', pattern: 'end', bars: 'G', band: 'hit' },
+  ],
+  tips: [
+    'Just two chords, and every verse is the same eight bars: G, G, D, G, then G, G, D, G.',
+    'D always lasts exactly one bar, then you go straight back to G.',
+    'D shape: index on the G string 2nd fret, middle on the high e 2nd fret, ring on the B string 3rd fret. Skip the two thickest strings when you strum.',
+    'G → D is the only change in the song. Run it with the drill until it lands on beat 1 without looking.',
+    'Match the kids with your strumming hand: brush the strings gently for the soft verse, then dig in for the last one.',
+  ],
+});

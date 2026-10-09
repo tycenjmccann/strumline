@@ -158,6 +158,7 @@
             <button class="pill on" data-f="all">All songs</button>
             <button class="pill" data-f="beginner">Beginner</button>
             <button class="pill" data-f="intermediate">Intermediate</button>
+            <button class="pill" data-f="kids">Kids</button>
           </div>
         </header>
         <div class="cards">
@@ -165,10 +166,11 @@
             .map((s, i) => {
               const chords = songChords(s);
               const dur = GS.arrange(s).durationSec;
-              return `<a class="card reveal" style="--c:${T.chordColor(chords[0])};--d:${i * 60}ms" data-level="${s.level}" href="#/song/${s.id}">
+              const kids = (s.tags || []).includes('kids');
+              return `<a class="card reveal" style="--c:${T.chordColor(chords[0])};--d:${Math.min(i, 12) * 60}ms" data-level="${s.level}" data-kids="${kids}" href="#/song/${s.id}">
                 <div class="card-art">${GS.art.cover(s)}${done[s.id] ? '<span class="done-badge">✓ Played</span>' : ''}</div>
                 <div class="card-body">
-                  <div class="card-top"><span class="num">${String(i + 1).padStart(2, '0')}</span><span class="lvl lvl-${s.level}">${LEVEL_LABEL[s.level]}</span></div>
+                  <div class="card-top"><span class="num">${String(i + 1).padStart(2, '0')}</span><span class="lvls">${kids ? '<span class="lvl lvl-kids">Kids</span>' : ''}<span class="lvl lvl-${s.level}">${LEVEL_LABEL[s.level]}</span></span></div>
                   <h3>${esc(s.title)}</h3>
                   <p class="by">${esc(s.artist)}</p>
                   <div class="chips">${chords.map((c) => chordName(c, 'chip')).join('')}</div>
@@ -192,7 +194,8 @@
     $$('.pill', app).forEach((b) =>
       b.addEventListener('click', () => {
         $$('.pill', app).forEach((x) => x.classList.toggle('on', x === b));
-        $$('.card', app).forEach((c) => c.classList.toggle('hide', b.dataset.f !== 'all' && c.dataset.level !== b.dataset.f));
+        const f = b.dataset.f;
+        $$('.card', app).forEach((c) => c.classList.toggle('hide', f === 'kids' ? c.dataset.kids !== 'true' : f !== 'all' && c.dataset.level !== f));
       }),
     );
     $('[data-scroll]', app).addEventListener('click', () => $('#setlist').scrollIntoView({ behavior: 'smooth' }));

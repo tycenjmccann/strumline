@@ -1,0 +1,51 @@
+GS.registerSong({
+  id: 'baby-shark',
+  order: 28,
+  title: 'Baby Shark',
+  artist: 'Pinkfong',
+  level: 'beginner',
+  tags: ['kids'],
+  bpm: 112,
+  meter: 4,
+  sub: 2,
+  capo: 0,
+  key: 'G',
+  feel: 'rock',
+  blurb:
+    'The dance-party favorite your kids will ask for again and again, built on the same four-chord loop as a hundred pop songs, so every minute you practise it pays off elsewhere.',
+  skills: ['G · Em · C · D', 'One chord per bar', 'Down-up strum'],
+  patterns: {
+    whole: {
+      name: 'Whole notes',
+      steps: 'D.......',
+      about: 'One strum per bar. Let it ring for four counts while you get the next chord ready.',
+    },
+    quarters: {
+      name: 'Quarter downs',
+      steps: 'D.D.D.D.',
+      about: 'Four even down strums per bar. Keep it bouncy and steady for the dancers.',
+    },
+    downup: {
+      name: 'Easy down-up',
+      steps: 'D.DUD.DU',
+      about: 'Down, down-up, down, down-up. Light upstrokes keep the party moving.',
+    },
+    end: { name: 'Last strum', steps: 'D.......', about: 'One big strum. Let it ring while everyone strikes a pose.' },
+  },
+  sections: [
+    { name: 'Intro', type: 'intro', pattern: 'whole', bars: 'G Em C D', repeat: 2, band: 'light' },
+    { name: 'Verses 1-2 (slow)', type: 'verse', pattern: 'whole', bars: 'G Em C D', repeat: 2, band: 'light' },
+    { name: 'Verses 3-4', type: 'verse', pattern: 'quarters', bars: 'G Em C D', repeat: 2 },
+    { name: 'Verses 5-6', type: 'verse', pattern: 'downup', bars: 'G Em C D', repeat: 2 },
+    { name: 'Verse 7 (soft)', type: 'verse', pattern: 'quarters', bars: 'G Em C D', band: 'light' },
+    { name: 'Verses 8-9', type: 'chorus', pattern: 'downup', bars: 'G Em C D', repeat: 2 },
+    { name: 'Big finish', type: 'outro', pattern: 'end', bars: 'G', band: 'hit' },
+  ],
+  tips: [
+    'Every verse is the same four bars, one chord per bar: G, Em, C, D. Learn that loop and you know the song.',
+    'G → Em: your index finger stays on the A string, 2nd fret. Pivot around it.',
+    'Em → C: your middle finger stays on the D string, 2nd fret. Move the other fingers around it.',
+    'C → D is the tricky one. Lift and land all three fingers together, and skip the two thickest strings on D.',
+    'If the kids are doing the hand motions with you, it is fine to drop to quarter downs or whole notes. Keeping the beat matters more than the pattern.',
+  ],
+});

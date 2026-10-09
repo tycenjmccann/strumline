@@ -31,7 +31,7 @@ Keyboard: `Space` play/pause · `←/→` bar · `↑/↓` speed · `L` loop · 
 
 ## Add a song
 
-Create `js/songs/<id>.js` with `GS.registerSong({...})` (schema documented at the top of `js/songs/wagon-wheel.js`) and add a `<script>` tag in `index.html`. Chords come from `GS.theory.CHORDS` or a song-level `shapes` override. Chords/structure only — no lyrics.
+Create `js/songs/<id>.js` with `GS.registerSong({...})` (schema documented at the top of `js/songs/wagon-wheel.js`), add a `<script>` tag in `index.html`, then run `node tools/validate-songs.js`. Chords come from `GS.theory.CHORDS` or a song-level `shapes` override. Chords/structure only — no lyrics.
 
 ## Code map
 

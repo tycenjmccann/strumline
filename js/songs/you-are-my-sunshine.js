@@ -1,0 +1,51 @@
+GS.registerSong({
+  id: 'you-are-my-sunshine',
+  order: 24,
+  title: 'You Are My Sunshine',
+  artist: 'Traditional',
+  level: 'beginner',
+  tags: ['kids'],
+  bpm: 120,
+  meter: 4,
+  sub: 2,
+  capo: 0,
+  key: 'G',
+  feel: 'country',
+  blurb:
+    'A sweet, easygoing classic that works as well at bedtime as it does on a road trip, with long, relaxed chord changes that give a new player plenty of time.',
+  skills: ['G · C · D', 'Long, easy changes', 'Down-up strum'],
+  patterns: {
+    whole: {
+      name: 'Whole notes',
+      steps: 'D.......',
+      about: 'One strum per bar. Let it ring for four slow counts while you get the next chord ready.',
+    },
+    quarters: {
+      name: 'Quarter downs',
+      steps: 'D.D.D.D.',
+      about: 'Four even down strums per bar. Keep your wrist loose and steady, like a clock.',
+    },
+    downup: {
+      name: 'Easy down-up',
+      steps: 'D.DUD.DU',
+      about: 'Down, down-up, down, down-up. The ups are small flicks on the top strings.',
+    },
+    end: { name: 'Last strum', steps: 'D.......', about: 'One big strum. Let it ring out.' },
+  },
+  sections: [
+    { name: 'Intro', type: 'intro', pattern: 'whole', bars: 'G D G G', band: 'light' },
+    { name: 'Chorus 1 (slow)', type: 'chorus', pattern: 'whole', bars: 'G G G G C C G G C C G G G D G G', band: 'light' },
+    { name: 'Verse 1', type: 'verse', pattern: 'quarters', bars: 'G G G G C C G G C C G G G D G G' },
+    { name: 'Chorus 2', type: 'chorus', pattern: 'quarters', bars: 'G G G G C C G G C C G G G D G G' },
+    { name: 'Verse 2', type: 'verse', pattern: 'downup', bars: 'G G G G C C G G C C G G G D G G' },
+    { name: 'Final chorus', type: 'chorus', pattern: 'downup', bars: 'G G G G C C G G C C G G G D G G' },
+    { name: 'Big finish', type: 'outro', pattern: 'end', bars: 'G', band: 'hit' },
+  ],
+  tips: [
+    'The verses and the chorus use the same 16 bars, so once one pass feels good you know the whole song.',
+    'G → C: lead with your ring finger. It lands on the A string, 3rd fret, and the other two fingers follow.',
+    'C always lasts two full bars, so there is plenty of time to get back to G.',
+    'D shows up once per pass, for a single bar near the end. Start moving toward it as the bar before it finishes, and skip the two thickest strings when you strum it.',
+    'Hum the tune while you play the slow chorus. Your ear will start telling you when each change is coming.',
+  ],
+});
