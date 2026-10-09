@@ -1026,6 +1026,92 @@ button {
   transform: scaleX(0);
 }
 
+/* Synced lyrics: sits under the hit line so it never covers incoming notes */
+.lyrics {
+  position: absolute;
+  left: 50%;
+  bottom: 6px;
+  transform: translateX(-50%);
+  width: min(94%, 1000px);
+  padding: 4px 20px 6px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(11, 8, 7, 0.35), rgba(11, 8, 7, 0.85));
+  backdrop-filter: blur(4px);
+  text-align: center;
+  pointer-events: none;
+}
+
+.ly-cur {
+  position: relative;
+  display: inline-block;
+  font-family: var(--f-body);
+  font-weight: 800;
+  font-size: 24px;
+  line-height: 1.1;
+  padding-top: 18px;
+  color: var(--cream);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+}
+
+.ly-cur::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  height: 3px;
+  width: var(--p, 0%);
+  border-radius: 2px;
+  background: var(--chord);
+  box-shadow: 0 0 10px var(--chord);
+}
+
+.ly-cur.in {
+  animation: lyIn 0.25s var(--ease);
+}
+
+@keyframes lyIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+.ly-next {
+  font-family: var(--f-body);
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--muted);
+  margin-top: 6px;
+  min-height: 1.1em;
+}
+
+.ly-next .ly-ch {
+  display: none;
+}
+
+.ly-seg {
+  position: relative;
+  white-space: pre-wrap;
+}
+
+.ly-ch {
+  position: absolute;
+  left: 0;
+  bottom: 100%;
+  font-family: var(--f-display);
+  font-weight: 900;
+  font-size: 0.78em;
+  letter-spacing: 0.02em;
+  color: var(--c, var(--amber));
+  white-space: nowrap;
+  text-shadow: 0 0 10px color-mix(in srgb, var(--c, var(--amber)) 60%, transparent);
+}
+
+.ly-inst {
+  color: var(--amber);
+  font-size: 22px;
+}
+
 /* Sidecar */
 .sidecar {
   display: grid;

@@ -14,7 +14,7 @@
 
   const PREF_KEY = 'strumline.prefs.v1';
   const prefs = Object.assign(
-    { speed: 1, metronome: false, band: true, guitar: true, countIn: true, vol: { guitar: 0.9, band: 0.7, click: 0.7 } },
+    { speed: 1, metronome: false, band: true, guitar: true, countIn: true, lyrics: true, vol: { guitar: 0.9, band: 0.7, click: 0.7 } },
     JSON.parse(localStorage.getItem(PREF_KEY) || '{}'),
   );
   const savePrefs = () => localStorage.setItem(PREF_KEY, JSON.stringify(prefs));
@@ -174,7 +174,7 @@
                   <h3>${esc(s.title)}</h3>
                   <p class="by">${esc(s.artist)}</p>
                   <div class="chips">${chords.map((c) => chordName(c, 'chip')).join('')}</div>
-                  <div class="card-meta"><span>${s.bpm} BPM</span><span>${s.capo ? 'Capo ' + s.capo : 'No capo'}</span><span>${T.fmtTime(dur)}</span></div>
+                  <div class="card-meta"><span>${Math.round(s.bpm)} BPM</span><span>${s.capo ? 'Capo ' + s.capo : 'No capo'}</span><span>${T.fmtTime(dur)}</span></div>
                 </div>
                 <span class="card-go">Play ${ICON.play}</span>
               </a>`;
@@ -266,7 +266,7 @@
           </div>
           <div class="song-meta">
             ${song.level ? `<span class="lvl lvl-${song.level}">${LEVEL_LABEL[song.level]}</span>` : ''}
-            <span class="meta-chip"><b>${song.bpm}</b> BPM</span>
+            <span class="meta-chip"><b>${Math.round(song.bpm)}</b> BPM</span>
             <span class="meta-chip">${song.meter === 6 ? '6/8' : song.meter + '/4'}</span>
             ${capo0 ? `<span class="meta-chip capo-chip">Capo <b>${capo0}</b></span>` : ''}
             <span class="meta-chip">${T.fmtTime(tl.durationSec)}</span>
@@ -292,6 +292,10 @@
                 <div><b class="jam-streak">0</b><span>streak</span></div>
                 <div><b class="jam-acc">–</b><span>timing</span></div>
                 <div class="jam-meter"><i></i></div>
+              </div>
+              <div class="lyrics" hidden>
+                <div class="ly-cur"></div>
+                <div class="ly-next"></div>
               </div>
               <button class="start-overlay">
                 <span class="so-btn">${ICON.play}</span>
@@ -363,6 +367,7 @@
               <button class="pedal" data-toggle="countIn" title="One-bar count-in"><i class="led"></i><span>Count-in</span></button>
               <button class="pedal" data-toggle="loop" title="Loop current section (L)"><i class="led"></i><span>Loop part</span></button>
               <button class="pedal pedal-jam" data-toggle="jam" title="Listen through your mic and score your timing"><i class="led"></i><span>Jam mic</span></button>
+              <button class="pedal" data-toggle="lyrics" title="Synced lyrics (local only)" hidden><i class="led"></i><span>Lyrics</span></button>
             </div>
             <div class="mixer">
               ${['guitar', 'band', 'click']
@@ -409,6 +414,7 @@
         countIn: player.countIn,
         loop: !!player.loop,
         jam: !!(GS.jam && GS.jam.active),
+        lyrics: !!prefs.lyrics,
       };
       $$('.pedal', root).forEach((p) => p.classList.toggle('on', !!st[p.dataset.toggle]));
     };
@@ -510,6 +516,11 @@
         } else if (k === 'countIn') player.countIn = prefs.countIn = !player.countIn;
         else if (k === 'loop') setLoopSection(player.loop ? null : sectionNow());
         else if (k === 'jam') await toggleJam();
+        else if (k === 'lyrics') {
+          prefs.lyrics = !prefs.lyrics;
+          lyricsEl.hidden = !(prefs.lyrics && lyrics);
+          lastLine = -2;
+        }
         savePrefs();
         reflectToggles();
       }),
@@ -619,6 +630,67 @@
       }
     }
 
+    // ── Lyrics (personal-use cache in data/lyrics, never committed; absent on the public site) ──
+    const lyricsEl = $('.lyrics', root);
+    const lyCur = $('.ly-cur', root);
+    const lyNext = $('.ly-next', root);
+    let lyrics = null;
+    let lastLine = -2;
+    const lyricId = isDrill ? null : song.id;
+    if (lyricId) {
+      const tag = document.createElement('script');
+      tag.src = `data/lyrics/${lyricId}.js`;
+      tag.onload = () => {
+        lyrics = GS.lyrics && GS.lyrics[lyricId];
+        if (!lyrics) return;
+        $('[data-toggle="lyrics"]', root).hidden = false;
+        lyricsEl.hidden = !prefs.lyrics;
+        reflectToggles();
+      };
+      tag.onerror = () => tag.remove();
+      document.body.appendChild(tag);
+    }
+    const lineHTML = (ln) => {
+      if (!ln) return '';
+      if (!ln.chart || !ln.chords || !ln.chords.length) return `<span class="ly-text">${esc(ln.text)}</span>`;
+      // Chords sit over the word they fall on in the chart's version of the line.
+      const t = ln.chart;
+      const cuts = ln.chords.map(([c]) => Math.min(c, t.length)).concat([t.length]);
+      let html = cuts[0] > 0 ? `<span class="ly-seg">${esc(t.slice(0, cuts[0]))}</span>` : '';
+      ln.chords.forEach(([c, name], i) => {
+        const seg = t.slice(cuts[i], cuts[i + 1]) || ' ';
+        html += `<span class="ly-seg"><b class="ly-ch" style="--c:${T.chordColor(name)}">${esc(name)}</b>${esc(seg)}</span>`;
+      });
+      return html;
+    };
+    const updateLyrics = (beat) => {
+      if (!lyrics || lyricsEl.hidden) return;
+      const L = lyrics.lines;
+      // Show a line a beat early so you can read ahead.
+      let i = -1;
+      for (let k = 0; k < L.length; k++) {
+        if (L[k].beat - 1 <= beat) i = k;
+        else break;
+      }
+      const cur = L[i];
+      const nxt = L[i + 1];
+      const instrumental = !cur || (nxt && nxt.beat - cur.beat > 3 * tl.meter && beat - cur.beat > 2 * tl.meter);
+      const key = instrumental ? -1 - (i + 1) : i;
+      if (key !== lastLine) {
+        lastLine = key;
+        lyCur.innerHTML = instrumental ? '<span class="ly-inst">♪</span>' : lineHTML(cur);
+        lyNext.innerHTML = lineHTML(instrumental ? nxt : L[i + 1]);
+        lyCur.classList.remove('in');
+        void lyCur.offsetWidth;
+        lyCur.classList.add('in');
+      }
+      if (!instrumental && cur) {
+        const end = nxt ? Math.min(nxt.beat, cur.beat + 4 * tl.meter) : cur.beat + 2 * tl.meter;
+        const p = Math.max(0, Math.min(1, (beat - cur.beat) / Math.max(0.5, end - cur.beat)));
+        lyCur.style.setProperty('--p', (p * 100).toFixed(1) + '%');
+      }
+    };
+
     // ── Per-frame UI ──
     let lastSpan = -1;
     let lastBar = -1;
@@ -712,6 +784,7 @@
         $('.jam-acc', root).textContent = st.judged ? Math.round((st.good / st.judged) * 100) + '%' : '–';
         $('.jam-meter i', root).style.transform = `scaleX(${Math.min(1, GS.jam.level * 8)})`;
       }
+      updateLyrics(beat);
       hw.frame(beat, performance.now() / 1000, { level: player.playing ? engine.level() : 0, chordColor: sp.color });
     };
     document.fonts.ready.then(() => (raf = requestAnimationFrame(frame)));

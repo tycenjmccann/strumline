@@ -25,6 +25,7 @@ Fonts load from Google Fonts (falls back to system fonts offline). Everything el
 | Practice | Speed 40–125%, loop a section, capo 0–7 (audio follows), count-in, mute guide guitar/band/click, per-bus volume |
 | Learn it | Chord cards (tap to hear), pattern cards with "Hear it", every chord change with an auto-generated finger tip + **Drill it**, road map, pro tips |
 | Drills | Generated mini-songs that work one change slow → on the beat → song strum |
+| Synced lyrics (local only) | `python3 tools/fetch-sources.py && python3 tools/build-arrangements.py --write <ids>` builds recording-matched arrangements and a personal lyrics cache in `data/lyrics/` (gitignored, never published). A Lyrics pedal appears when the cache exists. |
 | Jam mic | Mic onset detection scores your strum timing (PERFECT / GOOD / LATE / MISS, streaks, multiplier). Use headphones. |
 
 Keyboard: `Space` play/pause · `←/→` bar · `↑/↓` speed · `L` loop · `M` click · `R` restart

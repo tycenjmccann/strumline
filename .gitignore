@@ -1,2 +1,6 @@
 .DS_Store
 *.log
+# Lyrics and raw chart caches are personal-use only; never commit them.
+data/lyrics/
+data/.cache/
+__pycache__/
