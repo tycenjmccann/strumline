@@ -19,7 +19,7 @@ Fonts load from Google Fonts (falls back to system fonts offline). Everything el
 
 | Area | What it does |
 |---|---|
-| Setlist | 9 full songs — 5 beginner, 4 intermediate — with generated cover art |
+| Setlist | 28 full songs: 19 beginner, 9 intermediate, 7 kids singalongs (Kids filter), with generated cover art |
 | Play along | 3D note highway (strums, picks, mutes, chord gates, section tags), live NOW/NEXT chord boxes with gliding finger dots, step-by-step strum strip, clickable song map |
 | Audio | 100% synthesized in Web Audio: Karplus–Strong acoustic strings + body EQ + room reverb, cajón kit, plucked bass, metronome. No samples. |
 | Practice | Speed 40–125%, loop a section, capo 0–7 (audio follows), count-in, mute guide guitar/band/click, per-bus volume |
