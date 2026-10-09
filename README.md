@@ -6,7 +6,7 @@ Guitar-Hero-style highway for learning real songs on acoustic. No build step, no
 
 ![Play along](docs/play-along.png)
 
-Built in one session with Claude Code (Claude Opus 5.5): 1h 16m wall clock, 4 human messages, ~$8.70 in tokens at API list rates.
+Built in one session with Claude Code (Claude Opus 5.5): 1h 16m wall clock, 1 prompt, ~$8.70 in tokens at API list rates.
 
 ## Run
 
