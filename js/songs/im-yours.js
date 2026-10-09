@@ -42,7 +42,7 @@ GS.registerSong({
     { name: 'Pre-Chorus', type: 'prechorus', pattern: 'main', bars: 'G D Em C G D Em C,D' },
     { name: 'Chorus', type: 'chorus', pattern: 'chorus', bars: 'G D Em C', repeat: 2 },
     { name: 'Scat Break', type: 'solo', pattern: 'main', bars: 'G D Em C', repeat: 2, band: 'light' },
-    { name: 'Bridge', type: 'bridge', pattern: 'chop', bars: 'G D Em C', repeat: 4, band: 'light' },
+    { name: 'Bridge', type: 'bridge', pattern: 'chop', bars: 'G,D Em D,C A7 G,D Em D,C A7' },
     { name: 'Pre-Chorus', type: 'prechorus', pattern: 'main', bars: 'G D Em C G D Em C,D' },
     { name: 'Final Chorus', type: 'chorus', pattern: 'chorus', bars: 'G D Em C', repeat: 4 },
     { name: 'Outro Jam', type: 'outro', pattern: 'main', bars: 'G D Em C', repeat: 4 },
@@ -53,7 +53,7 @@ GS.registerSong({
     'The chuck: just before beats 2 and 4, let your fretting fingers go slack so they touch the strings without pressing, strum, then press back down.',
     'G → Em: your index stays on the A string, fret 2. Lift the other fingers and drop your middle onto the D string, fret 2.',
     'Em → C: your middle stays on the D string, fret 2. Add ring on the A string, fret 3 and index on the B string, fret 1.',
-    'Every chord gets exactly one bar, and the G D Em C loop never changes, so once the shapes are automatic, put all your focus on the bounce.',
+    'Almost every bar is the G D Em C loop, one chord per bar. The bridge adds an A7: same as A with your middle finger lifted off the G string.',
     'Keep the strumming hand loose and the upstrokes light. The groove lives in the chucks landing exactly on 2 and 4.',
   ],
 });
