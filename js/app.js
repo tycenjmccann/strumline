@@ -662,12 +662,15 @@
       if (!lyrics || lyricsEl.hidden) return;
       const L = lyrics.karaoke;
       const bps = (tl.bpm * player.speed) / 60;
-      const pre = 0.18 * bps;
-      const hold = 0.35 * bps;
+      // A line shows ~1 s early (only once the previous line has finished), and its last word hangs on
+      // until the next line takes over: up to 2.5 s into a break, which covers long held notes.
+      const lead = (k) => Math.min(1.0 * bps, Math.max(0.18 * bps, k > 0 ? L[k].beat - L[k - 1].end : 1.0 * bps));
+      const shown = (k) => L[k].beat - lead(k);
+      const until = (k) => Math.max(L[k].end + 0.35 * bps, Math.min(k + 1 < L.length ? shown(k + 1) : Infinity, L[k].end + 2.5 * bps));
       let li = -1;
       for (let k = 0; k < L.length; k++) {
-        if (beat >= L[k].beat - pre && beat <= L[k].end + hold) li = k;
-        if (L[k].beat - pre > beat) break;
+        if (shown(k) > beat) break;
+        if (beat < until(k)) li = k;
       }
       if (li !== lastLine) {
         lastLine = li;
@@ -676,7 +679,7 @@
           kara.classList.remove('on');
         } else {
           kara.innerHTML = phraseHTML(L[li]);
-          kara.classList.remove('on');
+          kara.classList.remove('on', 'out');
           void kara.offsetWidth;
           kara.classList.add('on');
         }
@@ -685,7 +688,6 @@
       const ln = L[li];
       let aw = -1;
       for (let i = 0; i < ln.words.length; i++) if (beat >= ln.words[i][1]) aw = i;
-      if (beat > ln.end + 0.05) aw = ln.words.length;
       if (aw !== lastWord) {
         lastWord = aw;
         kara.querySelectorAll('.k-w').forEach((el, i) => {
@@ -693,7 +695,7 @@
           el.classList.toggle('past', i < aw);
         });
       }
-      kara.classList.toggle('out', beat > ln.end + 0.12 * bps);
+      kara.classList.toggle('out', beat > until(li) - 0.2 * bps);
     };
 
     // ── Per-frame UI ──
